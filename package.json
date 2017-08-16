@@ -1,0 +1,47 @@
+{
+  "name": "water-wave",
+  "version": "1.0.0",
+  "description": "一个用来生成点击后产生水波纹效果的react组件",
+  "main": "index.js",
+  "scripts": {
+    "build": "BABEL_ENV=production ./node_modules/.bin/babel src --out-dir lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://qiqiboy@github.com/qiqiboy/water-wave.git"
+  },
+  "keywords": [
+    "react",
+    "react-component",
+    "water-wave"
+  ],
+  "author": "qiqiboy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/qiqiboy/water-wave/issues"
+  },
+  "homepage": "https://github.com/qiqiboy/water-wave#readme",
+  "dependencies": {
+    "raf-dom": "^1.0.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react-app": "^3.0.2"
+  },
+  "peerDependencies": {
+    "react": "^15.6.1",
+    "prop-types": "^15.5.10"
+  },
+  "babel": {
+    "presets": [
+      "react-app",
+      [
+        "babel-preset-env",
+        {
+          "modules": "commonjs"
+        }
+      ]
+    ]
+  }
+}
