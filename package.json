@@ -1,8 +1,8 @@
 {
   "name": "water-wave",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "一个用来生成点击后产生水波纹效果的react组件",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "build": "BABEL_ENV=production ./node_modules/.bin/babel src --out-dir lib"
   },
