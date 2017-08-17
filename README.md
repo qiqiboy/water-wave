@@ -14,16 +14,28 @@
 示例如下：
 
 ```jsx
-    import React from 'react';
-    import WaterWave from 'water-wave';
-    import 'water-wave/style.css';
+import React from 'react';
+import WaterWave from 'water-wave';
+import 'water-wave/style.css';
 
-    const MyComponent = () =>
-        <button className="btn">
-            按钮
-            <WaterWave color="#fff" duration={800} />
-        </button>;
+const MyComponent = () =>
+    <button className="btn">
+        按钮
+        <WaterWave color="#fff" duration={800} />
+    </button>;
 ```
 
 ### 效果
-待补充...
+![](https://user-images.githubusercontent.com/3774036/29410146-e8f2e4d8-8381-11e7-98ed-661c798a8d65.gif)
+
+gif图中效果代码示例：
+```jsx
+<button className="btn1">BUTTON <Water /></button>
+<button className="btn2">BUTTON <Water /></button>
+<button className="btn3">BUTTON <Water color="#ff4081"/></button>
+<button className="btn4">BUTTON <Water color="#26a69a" /></button>
+<button className="btn5">BUTTON <Water duration={2000} /></button>
+<button className="btn6">BUTTON <Water duration={200} /></button>
+<button className="btn7">BUTTON <Water color="rgba(0,0,0,.5)" duration={2000} /></button>
+<button className="btn8">BUTTON <Water color="rgba(0,0,0,.5)" duration={200} /></button>
+```

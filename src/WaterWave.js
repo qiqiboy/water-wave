@@ -75,9 +75,9 @@ class Water extends Component {
     }
 
     clearEvent() {
+        delete this.startState;
         this.clearTimer = setTimeout(() => {
             delete this.eventGroup;
-            delete this.startState;
         }, 500);
     }
 
