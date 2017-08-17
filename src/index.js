@@ -40,14 +40,14 @@ class Water extends Component {
             const run = () => {
                 const now = Date.now();
                 const offset = now - startTime;
+
                 cancelAnimationFrame(this.timer);
+                ctx.clearRect(0, 0, width, height);
 
                 if (offset < duration) {
                     this.draw(ctx, x, y, offset / duration * Math.max(width, height), Math.min(.3, 1 - offset / duration));
 
                     this.timer = requestAnimationFrame(run);
-                } else {
-                    ctx.clearRect(0, 0, width, height);
                 }
             }
 
@@ -56,7 +56,6 @@ class Water extends Component {
     }
 
     draw(ctx, x, y, radius, opacity) {
-        ctx.clearRect(0, 0, this.refs.canvas.width, this.refs.canvas.height);
         ctx.beginPath();
         ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
         ctx.fillStyle = this.props.color;
