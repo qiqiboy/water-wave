@@ -24,6 +24,7 @@ class Water extends Component {
         const canvasParent = this.refs.canvas.parentNode;
 
         cancelAnimationFrame(this.timer);
+        clearTimeout(this.clearTimer);
         canvasParent.classList.remove('water-wave-container');
 
         Object.keys(events.event2code)
@@ -82,15 +83,20 @@ class Water extends Component {
     }
 
     createWave = ev => {
-        if (!this.refs.canvas.parentNode.disabled) {
+        const canvasParent = this.refs.canvas.parentNode;
+        const disabled = typeof this.props.disabled === 'boolean' ? this.props.disabled : canvasParent.disabled;
+
+        if (!disabled) {
             const dpr = window.devicePixelRatio || 1;
-            const { top, left, width, height } = this.refs.canvas.parentNode.getBoundingClientRect();
+            const { top, left, width, height } = canvasParent.getBoundingClientRect();
             const { clientX, clientY } = ev;
-            const x = clientX - left;
-            const y = clientY - top;
+            const pointX = clientX - left;
+            const pointY = clientY - top;
             const canvas = this.refs.canvas;
             const ctx = canvas.getContext('2d');
-            const { duration } = this.props;
+            const { duration, radius, alpha } = this.props;
+            const maxRadius = typeof radius === 'number' ? radius : Math.max(width, height);
+            const [x, y] = this.getOrigin(width, height);
 
             canvas.width = width * dpr;
             canvas.height = height * dpr;
@@ -106,7 +112,11 @@ class Water extends Component {
                 ctx.clearRect(0, 0, width, height);
 
                 if (offset < duration) {
-                    this.draw(ctx, x, y, offset / duration * Math.max(width, height), Math.min(.3, 1 - offset / duration));
+                    this.draw(ctx,
+                        isNaN(x) ? pointX : x,
+                        isNaN(y) ? pointY : y,
+                        offset / duration * maxRadius,
+                        Math.min(alpha, 1 - offset / duration));
 
                     this.timer = requestAnimationFrame(run);
                 }
@@ -124,6 +134,36 @@ class Water extends Component {
         ctx.fill();
     }
 
+    getOrigin(width, height) {
+        const ret = this.props.origin.split(/\s+/);
+        const left = this.getPoint(ret[0], width);
+        const top = this.getPoint(ret[1], height);
+
+        return [left, top];
+    }
+
+    getPoint(name = 'auto', size) {
+        let numOrPer = name;
+
+        if (/^\d+%?$/.test(name) === false) {
+            switch (name) {
+                case 'top':
+                case 'left':
+                    numOrPer = '0';
+                    break;
+                case 'right':
+                case 'bottom':
+                    numOrPer = '100%';
+                    break;
+                case 'center':
+                    numOrPer = '50%';
+                    break;
+            }
+        }
+
+        return parseFloat(numOrPer) * (numOrPer.substr(-1) === '%' ? size / 100 : 1);
+    }
+
     render() {
         return (
             <canvas ref="canvas" className="water-wave-canvas"></canvas>
@@ -132,12 +172,19 @@ class Water extends Component {
 
     static defaultProps = {
         duration: 500,
-        color: '#fff'
+        color: '#fff',
+        origin: 'auto',
+        radius: 'auto',
+        alpha: .3
     }
 
     static propTypes = {
-        duration: PropTypes.number,
-        color: PropTypes.string
+        duration: PropTypes.number.isRequired,
+        color: PropTypes.string.isRequired,
+        disabled: PropTypes.bool,
+        origin: PropTypes.string.isRequired,
+        radius: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
+        alpha: PropTypes.number.isRequired
     }
 }
 

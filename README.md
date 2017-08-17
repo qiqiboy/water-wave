@@ -25,6 +25,14 @@ const MyComponent = () =>
     </button>;
 ```
 
+#### 组件属性参数说明
+* `color` 颜色值，默认值：#ffffff
+* `alpha` 透明度，默认值：0.3
+* `duration` 动画持续毫秒数，默认值：500
+* `disabled` 是否禁用效果。默认情况下根据父节点是否被disabled决定
+* `radius` 波浪半径。默认为最大的宽度或长度。手动指定只支持传入一个确定的数字
+* `origin` 波浪圆心位置，以父节点为参考，类似`background-origin`，例如`auto`、 `left center`、 `30% 70%`、 `100 100`。默认值：auto
+
 ### 效果
 ![](https://user-images.githubusercontent.com/3774036/29410146-e8f2e4d8-8381-11e7-98ed-661c798a8d65.gif)
 
