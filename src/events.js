@@ -25,13 +25,11 @@ export const format = ev => {
     const group = getGroup(ev.type);
 
     if (group === 'touch') {
-        const { clientX, clientY, pageX, pageY } = ev.changedTouches.item(0);
+        const { clientX, clientY } = ev.changedTouches.item(0);
 
         return Object.assign(ev, {
             clientX,
-            clientY,
-            pageX,
-            pageY
+            clientY
         });
     }
 

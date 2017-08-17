@@ -45,24 +45,20 @@ class Water extends Component {
                 //确保前后一致的事件类型
                 if (this.eventGroup === group) {
                     const _ev = events.format(ev);
-
                     const { pageX, pageY } = _ev;
-                    const now = Date.now();
 
                     clearTimeout(this.clearTimer);
 
                     if (code === 0 && !this.startState) {
                         this.startState = {
                             pageX,
-                            pageY,
-                            now
+                            pageY
                         }
                     }
 
                     if (code === 2 && this.startState) {
-                        if (now - this.startState.now < 400 &&
-                            Math.abs(pageX - this.startState.pageX) < 3 &&
-                            Math.abs(pageY - this.startState.pageY) < 3) {
+                        if (Math.abs(pageX - this.startState.pageX) < 10 &&
+                            Math.abs(pageY - this.startState.pageY) < 10) {
                             this.createWave(_ev);
                         }
                     }
@@ -82,7 +78,7 @@ class Water extends Component {
         this.clearTimer = setTimeout(() => {
             delete this.eventGroup;
             delete this.startState;
-        }, 350);
+        }, 500);
     }
 
     createWave = ev => {
