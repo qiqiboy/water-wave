@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import { requestAnimationFrame, cancelAnimationFrame } from 'raf-dom';
 import * as events from './events';
 
+const TARGET_CLASS = 'water-wave-target';
+const WATER_DURATION_CLASS = 'water-wave-duration';
+
 class Water extends Component {
     componentDidMount() {
         const canvasParent = this.refs.canvas.parentNode;
@@ -12,7 +15,7 @@ class Water extends Component {
             canvasParent.style.position = 'relative';
         }
 
-        canvasParent.classList.add('water-wave-target');
+        canvasParent.classList.add(TARGET_CLASS);
 
         Object.keys(events.event2code)
             .forEach(type => {
@@ -25,7 +28,7 @@ class Water extends Component {
 
         cancelAnimationFrame(this.timer);
         clearTimeout(this.clearTimer);
-        canvasParent.classList.remove('water-wave-container');
+        canvasParent.classList.remove(TARGET_CLASS);
 
         Object.keys(events.event2code)
             .forEach(type => {
@@ -112,6 +115,7 @@ class Water extends Component {
             canvas.height = height * dpr;
 
             ctx.scale(dpr, dpr);
+            canvasParent.classList.add(WATER_DURATION_CLASS);
 
             const startTime = Date.now();
             const run = () => {
@@ -122,7 +126,7 @@ class Water extends Component {
 
                 if (offset < duration) {
                     const ratio = offset / duration;
-                    const opacity = this.startState ? alpha : Math.min(alpha, 1 - ratio);
+                    const opacity = press === 'down' && this.startState ? alpha : Math.min(alpha, 1 - ratio);
 
                     ctx.clearRect(0, 0, width, height);
                     this.draw(ctx,
@@ -135,10 +139,11 @@ class Water extends Component {
                 } else if (press === 'down' && this.startState) {
                     this.clearShadow = () => {
                         delete this.clearShadow;
-                        ctx.clearRect(0, 0, width, height);
+
+                        canvasParent.classList.remove(WATER_DURATION_CLASS);
                     }
                 } else {
-                    ctx.clearRect(0, 0, width, height);
+                    canvasParent.classList.remove(WATER_DURATION_CLASS);
                 }
             }
 
