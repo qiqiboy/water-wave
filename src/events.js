@@ -3,9 +3,9 @@ export const event2code = {
     pointerdown: 0,
     mousedown: 0,
 
-    touchmove: 1,
-    pointermove: 1,
-    mousemove: 1,
+    //touchmove: 1,
+    //pointermove: 1,
+    //mousemove: 1,
 
     touchend: 2,
     pointerup: 2,
@@ -25,11 +25,14 @@ export const format = ev => {
     const group = getGroup(ev.type);
 
     if (group === 'touch') {
-        const { clientX, clientY } = ev.changedTouches.item(0);
+        const { clientX, clientY, pageX, pageY } = ev.changedTouches.item(0);
 
         return Object.assign(ev, {
             clientX,
             clientY
+        }, 'pageX' in ev ? {} : {
+            pageX,
+            pageY
         });
     }
 

@@ -16,7 +16,7 @@ class Water extends Component {
 
         Object.keys(events.event2code)
             .forEach(type => {
-                canvasParent.addEventListener(type, this, false);
+                (events.event2code[type] === 2 ? document : canvasParent).addEventListener(type, this, false);
             });
     }
 
@@ -29,13 +29,14 @@ class Water extends Component {
 
         Object.keys(events.event2code)
             .forEach(type => {
-                canvasParent.removeEventListener(type, this, false);
+                (events.event2code[type] === 2 ? document : canvasParent).removeEventListener(type, this, false);
             });
     }
 
     handleEvent(ev) {
         const code = events.getCode(ev.type);
         const group = events.getGroup(ev.type);
+        const { press } = this.props;
 
         switch (code) {
             case 0:
@@ -50,21 +51,30 @@ class Water extends Component {
 
                     clearTimeout(this.clearTimer);
 
-                    if (code === 0 && !this.startState) {
-                        this.startState = {
-                            pageX,
-                            pageY
+                    if (code === 0) {
+                        if (!this.startState) {
+                            this.startState = {
+                                pageX,
+                                pageY
+                            }
                         }
-                    }
 
-                    if (code === 2 && this.startState) {
-                        if (Math.abs(pageX - this.startState.pageX) < 10 &&
-                            Math.abs(pageY - this.startState.pageY) < 10) {
+                        if (press === 'down') {
                             this.createWave(_ev);
                         }
                     }
 
                     if (code === 2) {
+                        if (press === 'up') {
+                            if (this.startState &&
+                                Math.abs(pageX - this.startState.pageX) < 10 &&
+                                Math.abs(pageY - this.startState.pageY) < 10) {
+                                this.createWave(_ev);
+                            }
+                        } else if (this.clearShadow) {
+                            this.clearShadow();
+                        }
+
                         this.clearEvent();
                     }
                 }
@@ -94,7 +104,7 @@ class Water extends Component {
             const pointY = clientY - top;
             const canvas = this.refs.canvas;
             const ctx = canvas.getContext('2d');
-            const { duration, radius, alpha } = this.props;
+            const { duration, radius, alpha, press } = this.props;
             const maxRadius = typeof radius === 'number' ? radius : Math.max(width, height);
             const [x, y] = this.getOrigin(width, height);
 
@@ -109,16 +119,26 @@ class Water extends Component {
                 const offset = now - startTime;
 
                 cancelAnimationFrame(this.timer);
-                ctx.clearRect(0, 0, width, height);
 
                 if (offset < duration) {
+                    const ratio = offset / duration;
+                    const opacity = this.startState ? alpha : Math.min(alpha, 1 - ratio);
+
+                    ctx.clearRect(0, 0, width, height);
                     this.draw(ctx,
                         isNaN(x) ? pointX : x,
                         isNaN(y) ? pointY : y,
-                        offset / duration * maxRadius,
-                        Math.min(alpha, 1 - offset / duration));
+                        ratio * maxRadius,
+                        opacity);
 
                     this.timer = requestAnimationFrame(run);
+                } else if (press === 'down' && this.startState) {
+                    this.clearShadow = () => {
+                        delete this.clearShadow;
+                        ctx.clearRect(0, 0, width, height);
+                    }
+                } else {
+                    ctx.clearRect(0, 0, width, height);
                 }
             }
 
@@ -175,7 +195,8 @@ class Water extends Component {
         color: '#fff',
         origin: 'auto',
         radius: 'auto',
-        alpha: .3
+        alpha: .3,
+        press: 'up'
     }
 
     static propTypes = {
@@ -184,7 +205,8 @@ class Water extends Component {
         disabled: PropTypes.bool,
         origin: PropTypes.string.isRequired,
         radius: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
-        alpha: PropTypes.number.isRequired
+        alpha: PropTypes.number.isRequired,
+        press: PropTypes.oneOf(['up', 'down']).isRequired
     }
 }
 
