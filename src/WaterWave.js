@@ -3,19 +3,18 @@ import PropTypes from 'prop-types';
 import { requestAnimationFrame, cancelAnimationFrame } from 'raf-dom';
 import * as events from './events';
 
-const TARGET_CLASS = 'water-wave-target';
-const WATER_DURATION_CLASS = 'water-wave-duration';
+const WATER_DURATION_CLASS = 'water-wave-canvas-duration';
 
 class Water extends Component {
     componentDidMount() {
         const canvasParent = this.refs.canvas.parentNode;
-        const position = window.getComputedStyle(canvasParent, null).position;
+        const { position } = window.getComputedStyle(canvasParent, null);
 
         if (position === 'static') {
             canvasParent.style.position = 'relative';
         }
 
-        canvasParent.classList.add(TARGET_CLASS);
+        canvasParent.style.webkitTapHighlightColor = 'rgba(0,0,0,0)';
 
         Object.keys(events.event2code)
             .forEach(type => {
@@ -28,7 +27,8 @@ class Water extends Component {
 
         cancelAnimationFrame(this.timer);
         clearTimeout(this.clearTimer);
-        canvasParent.classList.remove(TARGET_CLASS);
+
+        canvasParent.style.webkitTapHighlightColor = null;
 
         Object.keys(events.event2code)
             .forEach(type => {
@@ -96,7 +96,8 @@ class Water extends Component {
     }
 
     createWave = ev => {
-        const canvasParent = this.refs.canvas.parentNode;
+        const canvas = this.refs.canvas;
+        const canvasParent = canvas.parentNode;
         const disabled = typeof this.props.disabled === 'boolean' ? this.props.disabled : canvasParent.disabled;
 
         if (!disabled) {
@@ -115,7 +116,7 @@ class Water extends Component {
             canvas.height = height * dpr;
 
             ctx.scale(dpr, dpr);
-            canvasParent.classList.add(WATER_DURATION_CLASS);
+            canvas.classList.add(WATER_DURATION_CLASS);
 
             const startTime = Date.now();
             const run = () => {
@@ -140,10 +141,10 @@ class Water extends Component {
                     this.clearShadow = () => {
                         delete this.clearShadow;
 
-                        canvasParent.classList.remove(WATER_DURATION_CLASS);
+                        canvas.classList.remove(WATER_DURATION_CLASS);
                     }
                 } else {
-                    canvasParent.classList.remove(WATER_DURATION_CLASS);
+                    canvas.classList.remove(WATER_DURATION_CLASS);
                 }
             }
 
