@@ -26,8 +26,10 @@ export const event2code = 'onpointerdown' in window ? {
 export const getCode = type =>
     event2code[type.toLowerCase()];
 
-export const getGroup = type =>
-    type.toLowerCase().match(/(touch|pointer|mouse)/i)[0];
+export const getGroup = type => {
+    const ret = type.toLowerCase().match(/(touch|pointer|mouse)/i);
+    return ret && ret[0];
+}
 
 export const format = ev => {
     const group = getGroup(ev.type);
