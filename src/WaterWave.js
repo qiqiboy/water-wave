@@ -18,7 +18,7 @@ class Water extends Component {
 
         Object.keys(events.event2code)
             .forEach(type => {
-                (events.event2code[type] === 2 ? document : canvasParent).addEventListener(type, this, false);
+                canvasParent.addEventListener(type, this, false);
             });
     }
 
@@ -32,7 +32,7 @@ class Water extends Component {
 
         Object.keys(events.event2code)
             .forEach(type => {
-                (events.event2code[type] === 2 ? document : canvasParent).removeEventListener(type, this, false);
+                canvasParent.removeEventListener(type, this, false);
             });
     }
 
@@ -47,8 +47,11 @@ class Water extends Component {
                     this.eventGroup = group;
                 }
             case 2:
+            case 3:
+            case 4:
+            case 5:
                 //确保前后一致的事件类型
-                if (this.eventGroup === group) {
+                if (this.eventGroup === group || code > 3) {
                     const _ev = events.format(ev);
                     const { pageX, pageY } = _ev;
 
@@ -65,17 +68,19 @@ class Water extends Component {
                         if (press === 'down') {
                             this.createWave(_ev);
                         }
-                    }
-
-                    if (code === 2) {
-                        if (press === 'up') {
+                    } else {
+                        if (press === 'up' && code === 2) {
                             if (this.startState &&
                                 Math.abs(pageX - this.startState.pageX) < 10 &&
                                 Math.abs(pageY - this.startState.pageY) < 10) {
                                 this.createWave(_ev);
                             }
-                        } else if (this.clearShadow) {
-                            this.clearShadow();
+                        }
+
+                        if (press === 'down') {
+                            if (this.clearShadow) {
+                                this.clearShadow();
+                            }
                         }
 
                         this.clearEvent();

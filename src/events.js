@@ -1,18 +1,26 @@
-export const event2code = {
-    touchstart: 0,
+export const event2code = 'onpointerdown' in window ? {
     pointerdown: 0,
+    //pointermove: 1,
+    pointerup: 2,
+    pointercancel: 3,
+    pointerleave: 4,
+
+    blur: 5
+} : {
+    touchstart: 0,
     mousedown: 0,
 
     //touchmove: 1,
-    //pointermove: 1,
     //mousemove: 1,
 
     touchend: 2,
-    pointerup: 2,
     mouseup: 2,
 
     touchcancel: 3,
-    pointercancel: 3
+
+    mouseleave: 4,
+
+    blur: 5
 }
 
 export const getCode = type =>
