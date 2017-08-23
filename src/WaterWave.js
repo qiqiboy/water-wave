@@ -114,7 +114,8 @@ class Water extends Component {
             const canvas = this.refs.canvas;
             const ctx = canvas.getContext('2d');
             const { duration, radius, alpha, press } = this.props;
-            const maxRadius = typeof radius === 'number' ? radius : Math.max(width, height);
+            const maxRadius = typeof radius === 'number' ? radius :
+                Math.sqrt(Math.max(pointX, width - pointX) ** 2 + Math.max(pointY, height - pointY) ** 2);
             const [x, y] = this.getOrigin(width, height);
 
             canvas.width = width * dpr;
