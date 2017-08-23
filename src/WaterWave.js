@@ -4,6 +4,9 @@ import { requestAnimationFrame, cancelAnimationFrame } from 'raf-dom';
 import * as events from './events';
 
 const WATER_DURATION_CLASS = 'water-wave-canvas-duration';
+const Tween = function(t, b, c, d) {
+    return -c * (t /= d) * (t - 2) + b;
+}
 
 class Water extends Component {
     componentDidMount() {
@@ -131,17 +134,18 @@ class Water extends Component {
 
                 cancelAnimationFrame(this.timer);
 
+                const ratio = Math.min(1, Tween(offset, 0, 1, duration));
+                const opacity = press === 'down' && this.startState ? alpha :
+                    Math.min(alpha, alpha - (ratio - .7) * alpha / .3);
+
+                ctx.clearRect(0, 0, width, height);
+                this.draw(ctx,
+                    isNaN(x) ? pointX : x,
+                    isNaN(y) ? pointY : y,
+                    ratio * maxRadius,
+                    opacity);
+
                 if (offset < duration) {
-                    const ratio = offset / duration;
-                    const opacity = press === 'down' && this.startState ? alpha : Math.min(alpha, 1 - ratio);
-
-                    ctx.clearRect(0, 0, width, height);
-                    this.draw(ctx,
-                        isNaN(x) ? pointX : x,
-                        isNaN(y) ? pointY : y,
-                        ratio * maxRadius,
-                        opacity);
-
                     this.timer = requestAnimationFrame(run);
                 } else if (press === 'down' && this.startState) {
                     this.clearShadow = () => {
@@ -203,7 +207,7 @@ class Water extends Component {
     }
 
     static defaultProps = {
-        duration: 500,
+        duration: 550,
         color: '#fff',
         origin: 'auto',
         radius: 'auto',
