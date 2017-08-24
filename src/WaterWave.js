@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { requestAnimationFrame, cancelAnimationFrame } from 'raf-dom';
 import * as events from './events';
+import Ripple from './Ripple';
 
 const WATER_DURATION_CLASS = 'water-wave-canvas-duration';
-const Tween = function(t, b, c, d) {
-    return -c * (t /= d) * (t - 2) + b;
-}
 
 class Water extends Component {
+    ripples = [];
+
     componentDidMount() {
         const canvasParent = this.refs.canvas.parentNode;
         const { position } = window.getComputedStyle(canvasParent, null);
@@ -97,7 +97,12 @@ class Water extends Component {
     }
 
     clearEvent() {
+        if (this.ripples.length) {
+            this.ripples.slice(-1)[0].pressUp();
+        }
+
         delete this.startState;
+
         this.clearTimer = setTimeout(() => {
             delete this.eventGroup;
         }, 500);
@@ -116,9 +121,7 @@ class Water extends Component {
             const pointY = clientY - top;
             const canvas = this.refs.canvas;
             const ctx = canvas.getContext('2d');
-            const { duration, radius, alpha, press } = this.props;
-            const maxRadius = typeof radius === 'number' ? radius :
-                Math.sqrt(Math.max(pointX, width - pointX) ** 2 + Math.max(pointY, height - pointY) ** 2);
+            const { press } = this.props;
             const [x, y] = this.getOrigin(width, height);
 
             canvas.width = width * dpr;
@@ -128,24 +131,23 @@ class Water extends Component {
             canvas.classList.add(WATER_DURATION_CLASS);
 
             const startTime = Date.now();
-            const run = () => {
-                const now = Date.now();
-                const offset = now - startTime;
 
+            this.ripples.push(new Ripple(ctx,
+                isNaN(x) ? pointX : x,
+                isNaN(y) ? pointY : y,
+                width, height,
+                startTime,
+                true,
+                this.props
+            ));
+
+            const run = () => {
                 cancelAnimationFrame(this.timer);
 
-                const ratio = Math.min(1, Tween(offset, 0, 1, duration));
-                const opacity = press === 'down' && this.startState ? alpha :
-                    Math.min(alpha, alpha - (ratio - .7) * alpha / .3);
-
                 ctx.clearRect(0, 0, width, height);
-                this.draw(ctx,
-                    isNaN(x) ? pointX : x,
-                    isNaN(y) ? pointY : y,
-                    ratio * maxRadius,
-                    opacity);
+                this.ripples = this.ripples.filter(ripple => ripple.render());
 
-                if (offset < duration) {
+                if (this.ripples.length) {
                     this.timer = requestAnimationFrame(run);
                 } else if (press === 'down' && this.startState) {
                     this.clearShadow = () => {
@@ -160,14 +162,6 @@ class Water extends Component {
 
             run();
         }
-    }
-
-    draw(ctx, x, y, radius, opacity) {
-        ctx.beginPath();
-        ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
-        ctx.fillStyle = this.props.color;
-        ctx.globalAlpha = opacity;
-        ctx.fill();
     }
 
     getOrigin(width, height) {
@@ -212,7 +206,8 @@ class Water extends Component {
         origin: 'auto',
         radius: 'auto',
         alpha: .3,
-        press: 'up'
+        press: 'up',
+        effect: 'ripple'
     }
 
     static propTypes = {
@@ -222,7 +217,8 @@ class Water extends Component {
         origin: PropTypes.string.isRequired,
         radius: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
         alpha: PropTypes.number.isRequired,
-        press: PropTypes.oneOf(['up', 'down']).isRequired
+        press: PropTypes.oneOf(['up', 'down']).isRequired,
+        effect: PropTypes.oneOf(['ripple', 'wave']).isRequired
     }
 }
 
