@@ -36,6 +36,7 @@ const MyComponent = () =>
 * `effect` 触发效果，可选值 `ripple`（中心点圆形荡漾效果）、`wave`（横向线行波纹）。默认值：ripple
 
 ### 效果
+#### effect = "ripple"
 ![](https://user-images.githubusercontent.com/3774036/29410146-e8f2e4d8-8381-11e7-98ed-661c798a8d65.gif)
 
 gif图中效果代码示例：
@@ -49,3 +50,7 @@ gif图中效果代码示例：
 <button className="btn7">BUTTON <Water color="rgba(0,0,0,.5)" duration={2000} /></button>
 <button className="btn8">BUTTON <Water color="rgba(0,0,0,.5)" duration={200} /></button>
 ```
+
+#### effect = "wave"
+![](https://user-images.githubusercontent.com/3774036/29657635-cf385e88-88ea-11e7-9722-8ced31052ac5.gif)
+
