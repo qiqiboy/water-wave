@@ -38,33 +38,38 @@ class Ripple {
             const deltaRight = Math.cos(angle) * waveSize;
             const waveY = (1 - ratio) * y;
 
-            ctx.moveTo(x - maxDistX, waveY + delta);
-            ctx.bezierCurveTo(x, waveY + delta - waveSize, x, waveY + deltaRight - waveSize, x + maxDistX, waveY + deltaRight);
+            ctx.moveTo((x - maxDistX) * ratio, waveY + delta);
+            ctx.bezierCurveTo(x, waveY + delta - waveSize,
+                x, waveY + deltaRight - waveSize,
+                width + (x + maxDistX - width) * ratio, waveY + deltaRight);
             ctx.lineTo(width, height);
             ctx.lineTo(0, height);
         } else if (effect === 'petal') {
             const arcSize = ratio * maxRadius;
+            const originSize = arcSize * .2; // 花瓣圆心的大小，这里设置为20%。越大画出的花瓣分离度越小
 
             if (!this.petalNumber) {
-                this.petalNumber = parseInt(Math.random() * 7) + 4; //随机出花瓣数量
+                this.petalNumber = parseInt(Math.random() * 17) + 4; //随机出花瓣数量
             }
 
-            const angle = Math.PI * 2 / this.petalNumber; //每个花瓣的角度大小
-            const x2 = Math.sin(angle) * arcSize;
-            const y2 = -Math.cos(angle) * arcSize;
+            const radian = Math.PI * 2 / this.petalNumber; //每个花瓣的弧度大小
+            const originX = Math.sin(radian) * originSize;
+            const originY = Math.cos(radian) * originSize;
+            const x2 = Math.sin(radian) * arcSize;
+            const y2 = -Math.cos(radian) * arcSize;
 
             ctx.save();
             ctx.translate(x, y);
             ctx.rotate(Math.PI * ratio);
-            ctx.moveTo(0, 0);
+            ctx.moveTo(0, -originY);
 
-            for (let i = 0; i < this.petalNumber; i++ ) {
-                ctx.bezierCurveTo(0, -arcSize, x2, y2, 0, 0);
-                ctx.rotate(angle);
+            for (let i = 0; i < this.petalNumber; i++) {
+                ctx.bezierCurveTo(0, -arcSize, x2, y2, originX, -originY);
+                ctx.rotate(radian);
             }
 
             ctx.restore();
-        } else if (effect === 'starLight'){ // 画星光 effect = 'starLight'
+        } else if (effect === 'starLight') { // 画星光 effect = 'starLight'
             const arcSize = ratio * Math.min(width, height);
             ctx.arc(x, y, arcSize, 0, 2 * Math.PI, false);
 
@@ -77,17 +82,17 @@ class Ripple {
                 }
             }
 
-            const angle = Math.PI * 2 / this.stars.length; //每个星星的角度大小
+            const radian = Math.PI * 2 / this.stars.length; //每个星星的角度大小
 
             ctx.save();
             ctx.translate(x, y); //移动原点
             ctx.moveTo(0, -arcSize);
 
             this.stars.forEach((size, i) => {
-                ctx.rotate(angle / 2);
+                ctx.rotate(radian / 2);
                 ctx.lineTo(0, -arcSize - ratio * size);
 
-                ctx.rotate(angle / 2);
+                ctx.rotate(radian / 2);
                 ctx.lineTo(0, -arcSize);
             });
 
