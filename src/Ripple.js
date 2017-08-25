@@ -33,7 +33,7 @@ class Ripple {
 
         if (effect === 'wave') { //画波纹 effect = 'wave'
             const angle = offset / 3 * Math.PI / 180;
-            const waveSize = Math.max(height / 2, height - y) * (1 - ratio)
+            const waveSize = Math.max(height / 2, height - y) * (1 - ratio);
             const delta = Math.sin(angle) * waveSize;
             const deltaRight = Math.cos(angle) * waveSize;
             const waveY = (1 - ratio) * y;
@@ -70,7 +70,7 @@ class Ripple {
 
             ctx.restore();
         } else if (effect === 'starLight') { // 画星光 effect = 'starLight'
-            const arcSize = ratio * Math.min(width, height);
+            const arcSize = ratio * Math.min(width, height, maxRadius);
             ctx.arc(x, y, arcSize, 0, 2 * Math.PI, false);
 
             if (!this.stars) {
@@ -82,7 +82,7 @@ class Ripple {
                 }
             }
 
-            const radian = Math.PI * 2 / this.stars.length; //每个星星的角度大小
+            const radian = Math.PI * 2 / this.stars.length; //每个星星的弧度大小
 
             ctx.save();
             ctx.translate(x, y); //移动原点
