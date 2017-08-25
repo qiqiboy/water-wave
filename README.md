@@ -54,3 +54,9 @@ gif图中效果代码示例：
 #### effect = "wave"
 ![](https://user-images.githubusercontent.com/3774036/29657635-cf385e88-88ea-11e7-9722-8ced31052ac5.gif)
 
+#### effect = "starLight"
+![](https://user-images.githubusercontent.com/3774036/29701337-aee4201e-899d-11e7-9390-ee0fa3d5de0c.gif)
+
+#### effect = "petal"
+![](https://user-images.githubusercontent.com/3774036/29701343-b94f9862-899d-11e7-825b-d5cc57c802fc.gif)
+
