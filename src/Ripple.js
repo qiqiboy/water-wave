@@ -29,6 +29,7 @@ class Ripple {
         const ratio = Math.max(Math.min(1, Tween(offset, 0, 1, duration)), 0);
         const opacity = keeping ? alpha : Math.min(alpha, alpha - (ratio - .7) * alpha / .3);
 
+        ctx.globalAlpha = opacity;
         ctx.beginPath();
 
         if (effect === 'wave') { //画波纹 effect = 'wave'
@@ -97,12 +98,35 @@ class Ripple {
             });
 
             ctx.restore();
+        } else if (effect === 'helix') { // 螺旋圈 effect = 'helix'
+            const minDelta = 2;
+            const levels = Math.min(10, parseInt(maxRadius / minDelta));
+            const totalDegs = ratio * 360 * (levels + 1);
+            const levelSize = maxRadius / levels;
+
+            ctx.save();
+            ctx.translate(x, y); //移动原点
+            ctx.rotate(-2 * Math.PI * ratio);
+            ctx.moveTo(0, 0);
+
+            for (let i = 0; i < totalDegs; i++) {
+                const radius = i / 360 * levelSize;
+                ctx.lineTo(Math.cos(i * Math.PI / 180) * radius, Math.sin(i * Math.PI / 180) * radius);
+            }
+
+            ctx.restore();
+
+            ctx.lineWidth = levelSize * ratio;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = color;
+            ctx.stroke();
+
+            return offset < duration;
         } else { //画圆 effect = 'ripple'
             ctx.arc(x, y, ratio * maxRadius, 0, 2 * Math.PI, false);
         }
 
         ctx.fillStyle = color;
-        ctx.globalAlpha = opacity;
         ctx.closePath();
         ctx.fill();
 

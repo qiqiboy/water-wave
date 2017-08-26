@@ -218,7 +218,7 @@ class Water extends Component {
         radius: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
         alpha: PropTypes.number.isRequired,
         press: PropTypes.oneOf(['up', 'down']).isRequired,
-        effect: PropTypes.oneOf(['ripple', 'wave', 'starLight', 'petal']).isRequired
+        effect: PropTypes.oneOf(['ripple', 'wave', 'starLight', 'petal', 'helix']).isRequired
     }
 }
 

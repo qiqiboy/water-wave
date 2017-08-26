@@ -1,6 +1,6 @@
 {
   "name": "water-wave",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "一个用来生成点击后产生水波纹效果的react组件",
   "main": "lib/WaterWave.js",
   "scripts": {
