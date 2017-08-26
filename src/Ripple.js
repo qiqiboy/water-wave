@@ -46,8 +46,9 @@ class Ripple {
             ctx.lineTo(width, height);
             ctx.lineTo(0, height);
         } else if (effect === 'petal') {
-            const arcSize = ratio * maxRadius;
-            const originSize = arcSize * .2; // 花瓣圆心的大小，这里设置为20%。越大画出的花瓣分离度越小
+            const petalSize = typeof props.radius === 'number' ? props.radius :
+                ratio * Math.max(width, height) / 2;
+            const originSize = petalSize * .5; // 花瓣圆心的大小，这里设置为5%。越大画出的花瓣分离度越小
 
             if (!this.petalNumber) {
                 this.petalNumber = parseInt(Math.random() * 17) + 4; //随机出花瓣数量
@@ -55,17 +56,18 @@ class Ripple {
 
             const radian = Math.PI * 2 / this.petalNumber; //每个花瓣的弧度大小
             const originX = Math.sin(radian) * originSize;
-            const originY = Math.cos(radian) * originSize;
+            const originY = -Math.cos(radian) * originSize;
+            const arcSize = petalSize / Math.cos(radian / 2) * 1.3;
             const x2 = Math.sin(radian) * arcSize;
             const y2 = -Math.cos(radian) * arcSize;
 
             ctx.save();
             ctx.translate(x, y);
             ctx.rotate(Math.PI * ratio);
-            ctx.moveTo(0, -originY);
+            ctx.moveTo(0, originY);
 
             for (let i = 0; i < this.petalNumber; i++) {
-                ctx.bezierCurveTo(0, -arcSize, x2, y2, originX, -originY);
+                ctx.bezierCurveTo(0, -arcSize, x2, y2, originX, originY);
                 ctx.rotate(radian);
             }
 
