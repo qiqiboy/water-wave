@@ -33,7 +33,7 @@ class Ripple {
         ctx.beginPath();
 
         if (effect === 'wave') { //画波纹 effect = 'wave'
-            const angle = offset / 3 * Math.PI / 180;
+            const angle = offset / 3 * Math.PI / 180; //摆动一个周期需要1080ms
             const waveSize = Math.max(height / 2, height - y) * (1 - ratio);
             const delta = Math.sin(angle) * waveSize;
             const deltaRight = Math.cos(angle) * waveSize;
@@ -106,7 +106,7 @@ class Ripple {
 
             ctx.save();
             ctx.translate(x, y); //移动原点
-            ctx.rotate(-2 * Math.PI * ratio);
+            ctx.rotate(offset * Math.PI / 180); //360ms旋转一圈
             ctx.moveTo(0, 0);
 
             for (let i = 0; i < totalDegs; i++) {
