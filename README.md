@@ -33,7 +33,11 @@ const MyComponent = () =>
 * `radius` 波浪半径。默认为最大的宽度或长度。手动指定只支持传入一个确定的数字
 * `origin` 波浪圆心位置，以父节点为参考，类似`background-origin`，例如`auto`、 `left center`、 `30% 70%`、 `100 100`。默认值：auto
 * `press` 触发时机，可选值 `up`（离开时才触发mouseup touchend）、`down`（按下去立即触发tocuhstart mousedown）。默认值：up
-* `effect` 触发效果，可选值 `ripple`（中心点圆形荡漾效果）、`wave`（横向线行波纹）、`starLight`（星光发散效果）、`petal`（花瓣旋转效果）、`helix`（螺旋效果）。默认值：ripple
+* `effect` 触发效果，可选值 `ripple`（中心点圆形荡漾效果）、`wave`（横向线行波纹）、`starLight`（星光发散效果）、`petal`（花瓣旋转效果）、`helix`（螺旋效果）。默认值：ripple,
+* `stopPropagation` 阻止效果冒泡。通过设置该参数为true，可以阻止父级节点触发效果。默认值：无
+
+#### waterwave事件
+当组件触发了效果时，会在当前节点派生一个名为 `waterwave` 的自定义事件。这是一个标准的DOM事件，所以可以通过 `addEventListener` 来监听。如果调用了事件的 `preventDefault`，也可以同时阻止当前节点以及所有父节点触发效果。
 
 ### 效果
 #### effect = "ripple"

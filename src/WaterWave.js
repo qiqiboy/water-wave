@@ -90,8 +90,10 @@ class Water extends Component {
                     }
                 }
                 break;
-            case 3:
-                this.clearEvent();
+            case 6:
+                if (ev.detail.shouldCancel || ev.defaultPrevented) {
+                    this.clearEvent();
+                }
                 break;
         }
     }
@@ -108,6 +110,25 @@ class Water extends Component {
         }, 500);
     }
 
+    dispatchEvent(stopPropagation = false) {
+        let ev;
+        if (typeof window.CustomEvent === 'function') {
+            ev = new CustomEvent('waterwave', {
+                bubbles: true,
+                cancelable: true,
+                detail: {
+                    shouldCancel: stopPropagation
+                }
+            });
+        } else {
+            ev = document.createEvent('CustomEvent');
+            ev.initCustomEvent('waterwave', true, true, {
+                shouldCancel: stopPropagation
+            });
+        }
+        return this.refs.canvas.parentNode.dispatchEvent(ev);
+    }
+
     createWave = ev => {
         const canvas = this.refs.canvas;
         const canvasParent = canvas.parentNode;
@@ -121,8 +142,13 @@ class Water extends Component {
             const pointY = clientY - top;
             const canvas = this.refs.canvas;
             const ctx = canvas.getContext('2d');
-            const { press } = this.props;
+            const { press, stopPropagation } = this.props;
             const [x, y] = this.getOrigin(width, height);
+
+            if (!this.dispatchEvent(stopPropagation)) {
+                //事件被取消，则不触发效果
+                return;
+            }
 
             canvas.width = width * dpr;
             canvas.height = height * dpr;
@@ -218,7 +244,8 @@ class Water extends Component {
         radius: PropTypes.oneOfType([PropTypes.oneOf(['auto']), PropTypes.number]).isRequired,
         alpha: PropTypes.number.isRequired,
         press: PropTypes.oneOf(['up', 'down']).isRequired,
-        effect: PropTypes.oneOf(['ripple', 'wave', 'starLight', 'petal', 'helix']).isRequired
+        effect: PropTypes.oneOf(['ripple', 'wave', 'starLight', 'petal', 'helix']).isRequired,
+        stopPropagation: PropTypes.bool
     }
 }
 
