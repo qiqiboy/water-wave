@@ -69,7 +69,7 @@ class Water extends Component {
                         }
 
                         if (press === 'down') {
-                            this.createWave(_ev);
+                            setTimeout(() => this.startState && this.createWave(_ev), 0);
                         }
                     } else {
                         if (press === 'up' && code === 2) {
@@ -91,7 +91,7 @@ class Water extends Component {
                 }
                 break;
             case 6:
-                if (ev.detail.shouldCancel || ev.defaultPrevented) {
+                if (ev.target !== this.refs.canvas.parentNode && (ev.detail.shouldCancel || ev.defaultPrevented)) {
                     this.clearEvent();
                 }
                 break;
