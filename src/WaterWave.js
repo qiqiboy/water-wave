@@ -19,10 +19,9 @@ class Water extends Component {
 
         canvasParent.style.webkitTapHighlightColor = 'rgba(0,0,0,0)';
 
-        Object.keys(events.event2code)
-            .forEach(type => {
-                canvasParent.addEventListener(type, this, false);
-            });
+        Object.keys(events.event2code).forEach(type => {
+            canvasParent.addEventListener(type, this, false);
+        });
     }
 
     componentWillUnmount() {
@@ -33,10 +32,9 @@ class Water extends Component {
 
         canvasParent.style.webkitTapHighlightColor = null;
 
-        Object.keys(events.event2code)
-            .forEach(type => {
-                canvasParent.removeEventListener(type, this, false);
-            });
+        Object.keys(events.event2code).forEach(type => {
+            canvasParent.removeEventListener(type, this, false);
+        });
     }
 
     handleEvent(ev) {
@@ -49,6 +47,7 @@ class Water extends Component {
                 if (!this.eventGroup) {
                     this.eventGroup = group;
                 }
+
             case 2:
             case 3:
             case 4:
@@ -65,7 +64,7 @@ class Water extends Component {
                             this.startState = {
                                 pageX,
                                 pageY
-                            }
+                            };
                         }
 
                         if (press === 'down') {
@@ -73,9 +72,11 @@ class Water extends Component {
                         }
                     } else {
                         if (press === 'up' && code === 2) {
-                            if (this.startState &&
+                            if (
+                                this.startState &&
                                 Math.abs(pageX - this.startState.pageX) < 10 &&
-                                Math.abs(pageY - this.startState.pageY) < 10) {
+                                Math.abs(pageY - this.startState.pageY) < 10
+                            ) {
                                 this.createWave(_ev);
                             }
                         }
@@ -89,11 +90,13 @@ class Water extends Component {
                         this.clearEvent();
                     }
                 }
+
                 break;
             case 6:
                 if (ev.target !== this.refs.canvas.parentNode && (ev.detail.shouldCancel || ev.defaultPrevented)) {
                     this.clearEvent();
                 }
+
                 break;
         }
     }
@@ -112,6 +115,7 @@ class Water extends Component {
 
     dispatchEvent(stopPropagation = false) {
         let ev;
+
         if (typeof window.CustomEvent === 'function') {
             ev = new CustomEvent('waterwave', {
                 bubbles: true,
@@ -122,10 +126,12 @@ class Water extends Component {
             });
         } else {
             ev = document.createEvent('CustomEvent');
+
             ev.initCustomEvent('waterwave', true, true, {
                 shouldCancel: stopPropagation
             });
         }
+
         return this.refs.canvas.parentNode.dispatchEvent(ev);
     }
 
@@ -158,14 +164,18 @@ class Water extends Component {
 
             const startTime = Date.now();
 
-            this.ripples.push(new Ripple(ctx,
-                isNaN(x) ? pointX : x,
-                isNaN(y) ? pointY : y,
-                width, height,
-                startTime,
-                true,
-                this.props
-            ));
+            this.ripples.push(
+                new Ripple(
+                    ctx,
+                    isNaN(x) ? pointX : x,
+                    isNaN(y) ? pointY : y,
+                    width,
+                    height,
+                    startTime,
+                    true,
+                    this.props
+                )
+            );
 
             const run = () => {
                 cancelAnimationFrame(this.timer);
@@ -180,15 +190,15 @@ class Water extends Component {
                         delete this.clearShadow;
 
                         canvas.classList.remove(WATER_DURATION_CLASS);
-                    }
+                    };
                 } else {
                     canvas.classList.remove(WATER_DURATION_CLASS);
                 }
-            }
+            };
 
             run();
         }
-    }
+    };
 
     getOrigin(width, height) {
         const ret = this.props.origin.split(/\s+/);
@@ -221,9 +231,7 @@ class Water extends Component {
     }
 
     render() {
-        return (
-            <canvas ref="canvas" className="water-wave-canvas"></canvas>
-        );
+        return <canvas ref="canvas" className="water-wave-canvas"></canvas>;
     }
 
     static defaultProps = {
@@ -231,10 +239,10 @@ class Water extends Component {
         color: '#fff',
         origin: 'auto',
         radius: 'auto',
-        alpha: .3,
+        alpha: 0.3,
         press: 'up',
         effect: 'ripple'
-    }
+    };
 
     static propTypes = {
         duration: PropTypes.number.isRequired,
@@ -246,7 +254,7 @@ class Water extends Component {
         press: PropTypes.oneOf(['up', 'down']).isRequired,
         effect: PropTypes.oneOf(['ripple', 'wave', 'starLight', 'petal', 'helix']).isRequired,
         stopPropagation: PropTypes.bool
-    }
+    };
 }
 
 export default Water;
