@@ -16,4 +16,4 @@ export interface WaterWaveProps {
     stopPropagation?: boolean;
 }
 
-export class WaterWave extends React.Component<WaterWaveProps> {}
+export default class WaterWave extends React.Component<WaterWaveProps> {}
