@@ -6,12 +6,14 @@ import Ripple from './Ripple';
 
 const WATER_DURATION_CLASS = 'water-wave-canvas-duration';
 
+const root = typeof window === 'undefined' ? global : window;
+
 class Water extends Component {
     ripples = [];
 
     componentDidMount() {
         const canvasParent = this.refs.canvas.parentNode;
-        const { position } = window.getComputedStyle(canvasParent, null);
+        const { position } = root.getComputedStyle(canvasParent, null);
 
         if (position === 'static') {
             canvasParent.style.position = 'relative';
@@ -116,7 +118,7 @@ class Water extends Component {
     dispatchEvent(stopPropagation = false) {
         let ev;
 
-        if (typeof window.CustomEvent === 'function') {
+        if (typeof root.CustomEvent === 'function') {
             ev = new CustomEvent('waterwave', {
                 bubbles: true,
                 cancelable: true,
@@ -141,7 +143,7 @@ class Water extends Component {
         const disabled = typeof this.props.disabled === 'boolean' ? this.props.disabled : canvasParent.disabled;
 
         if (!disabled) {
-            const dpr = window.devicePixelRatio || 1;
+            const dpr = root.devicePixelRatio || 1;
             const { top, left, width, height } = canvasParent.getBoundingClientRect();
             const { clientX, clientY } = ev;
             const pointX = clientX - left;

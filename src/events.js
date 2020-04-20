@@ -1,39 +1,44 @@
-export const event2code = 'onpointerdown' in window ? {
-    pointerdown: 0,
-    //pointermove: 1,
-    pointerup: 2,
-    pointercancel: 3,
-    pointerleave: 4,
+const root = typeof window === 'undefined' ? global : window;
 
-    blur: 5,
+export const event2code =
+    'onpointerdown' in root
+        ? {
+              pointerdown: 0,
+              //pointermove: 1,
+              pointerup: 2,
+              pointercancel: 3,
+              pointerleave: 4,
 
-    waterwave: 6
-} : {
-    touchstart: 0,
-    mousedown: 0,
+              blur: 5,
 
-    //touchmove: 1,
-    //mousemove: 1,
+              waterwave: 6
+          }
+        : {
+              touchstart: 0,
+              mousedown: 0,
 
-    touchend: 2,
-    mouseup: 2,
+              //touchmove: 1,
+              //mousemove: 1,
 
-    touchcancel: 3,
+              touchend: 2,
+              mouseup: 2,
 
-    mouseleave: 4,
+              touchcancel: 3,
 
-    blur: 5,
+              mouseleave: 4,
 
-    waterwave: 6
-}
+              blur: 5,
 
-export const getCode = type =>
-    event2code[type.toLowerCase()];
+              waterwave: 6
+          };
+
+export const getCode = type => event2code[type.toLowerCase()];
 
 export const getGroup = type => {
     const ret = type.toLowerCase().match(/(touch|pointer|mouse)/i);
+
     return ret && ret[0];
-}
+};
 
 export const format = ev => {
     const group = getGroup(ev.type);
@@ -41,14 +46,20 @@ export const format = ev => {
     if (group === 'touch') {
         const { clientX, clientY, pageX, pageY } = ev.changedTouches.item(0);
 
-        return Object.assign(ev, {
-            clientX,
-            clientY
-        }, 'pageX' in ev ? {} : {
-            pageX,
-            pageY
-        });
+        return Object.assign(
+            ev,
+            {
+                clientX,
+                clientY
+            },
+            'pageX' in ev
+                ? {}
+                : {
+                      pageX,
+                      pageY
+                  }
+        );
     }
 
     return ev;
-}
+};
