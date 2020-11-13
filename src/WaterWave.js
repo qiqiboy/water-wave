@@ -50,7 +50,7 @@ class Water extends Component {
                     this.eventGroup = group;
                 }
 
-            case 2:
+            case 2: // eslint-disable-line
             case 3:
             case 4:
             case 5:
@@ -99,6 +99,9 @@ class Water extends Component {
                     this.clearEvent();
                 }
 
+                break;
+
+            default:
                 break;
         }
     }
@@ -225,6 +228,8 @@ class Water extends Component {
                     break;
                 case 'center':
                     numOrPer = '50%';
+                    break;
+                default:
                     break;
             }
         }
