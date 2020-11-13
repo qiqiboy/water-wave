@@ -324,7 +324,7 @@ var Ripple = /*#__PURE__*/function () {
       var maxDistY = Math.max(y, height - y);
       var maxRadius = typeof props.radius === 'number' ? props.radius : Math.sqrt(Math.pow(maxDistX, 2) + Math.pow(maxDistY, 2));
       var ratio = Math.max(Math.min(1, Tween(offset, 0, 1, duration)), 0);
-      var opacity = keeping ? alpha : Math.min(alpha, alpha - (ratio - .7) * alpha / .3);
+      var opacity = keeping ? alpha : Math.min(alpha, alpha - (ratio - 0.7) * alpha / 0.3);
       ctx.globalAlpha = opacity;
       ctx.beginPath();
 
@@ -342,7 +342,7 @@ var Ripple = /*#__PURE__*/function () {
         ctx.lineTo(0, height);
       } else if (effect === 'petal') {
         var petalSize = typeof props.radius === 'number' ? props.radius : ratio * Math.max(width, height) / 2;
-        var originSize = petalSize * .5; // 花瓣圆心的大小，这里设置为5%。越大画出的花瓣分离度越小
+        var originSize = petalSize * 0.5; // 花瓣圆心的大小，这里设置为5%。越大画出的花瓣分离度越小
 
         if (!this.petalNumber) {
           this.petalNumber = parseInt(Math.random() * 17) + 4; //随机出花瓣数量

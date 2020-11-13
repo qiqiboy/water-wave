@@ -1,19 +1,17 @@
 {
   "name": "water-wave",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "一个用来生成点击后产生水波纹效果的react组件",
   "scripts": {
-    "build": "npm run clear && npm run build:bundle",
-    "build:bundle": "rollup -c",
-    "build:declaration": "tsc --emitDeclarationOnly",
-    "clear": "rimraf dist",
+    "build": "rimraf dist && rollup -c",
     "test": "node jest/test.js",
     "tsc": "node -e \"require('fs-extra').outputJsonSync('.git-tsconfig.json',{ extends: './tsconfig.json', include: ['*.d.ts'].concat(process.env.StagedFiles.split(/\\n+/)) })\" && echo 'TS checking...\\n' && tsc -p .git-tsconfig.json --noEmit --checkJs false"
   },
   "files": [
     "LICENSE",
     "README.md",
-    "dist/"
+    "dist/",
+    "style.css"
   ],
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
