@@ -11,8 +11,12 @@ const root = typeof window === 'undefined' ? global : window;
 class Water extends Component {
     ripples = [];
 
+    canvas = null;
+
+    refCanvasCallback = node => (this.canvas = node);
+
     componentDidMount() {
-        const canvasParent = this.refs.canvas.parentNode;
+        const canvasParent = this.canvas.parentNode;
         const { position } = root.getComputedStyle(canvasParent, null);
 
         if (position === 'static') {
@@ -27,7 +31,7 @@ class Water extends Component {
     }
 
     componentWillUnmount() {
-        const canvasParent = this.refs.canvas.parentNode;
+        const canvasParent = this.canvas.parentNode;
 
         cancelAnimationFrame(this.timer);
         clearTimeout(this.clearTimer);
@@ -95,7 +99,7 @@ class Water extends Component {
 
                 break;
             case 6:
-                if (ev.target !== this.refs.canvas.parentNode && (ev.detail.shouldCancel || ev.defaultPrevented)) {
+                if (ev.target !== this.canvas.parentNode && (ev.detail.shouldCancel || ev.defaultPrevented)) {
                     this.clearEvent();
                 }
 
@@ -137,11 +141,11 @@ class Water extends Component {
             });
         }
 
-        return this.refs.canvas.parentNode.dispatchEvent(ev);
+        return this.canvas.parentNode?.dispatchEvent(ev);
     }
 
     createWave = ev => {
-        const canvas = this.refs.canvas;
+        const canvas = this.canvas;
         const canvasParent = canvas.parentNode;
         const disabled = typeof this.props.disabled === 'boolean' ? this.props.disabled : canvasParent.disabled;
 
@@ -151,7 +155,6 @@ class Water extends Component {
             const { clientX, clientY } = ev;
             const pointX = clientX - left;
             const pointY = clientY - top;
-            const canvas = this.refs.canvas;
             const ctx = canvas.getContext('2d');
             const { press, stopPropagation } = this.props;
             const [x, y] = this.getOrigin(width, height);
@@ -238,7 +241,7 @@ class Water extends Component {
     }
 
     render() {
-        return <canvas ref="canvas" className="water-wave-canvas"></canvas>;
+        return <canvas ref={this.refCanvasCallback} className="water-wave-canvas"></canvas>;
     }
 
     static defaultProps = {

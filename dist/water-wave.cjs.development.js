@@ -454,9 +454,14 @@ var Water = /*#__PURE__*/function (_Component) {
 
     _this = _super.call.apply(_super, [this].concat(args));
     _this.ripples = [];
+    _this.canvas = null;
+
+    _this.refCanvasCallback = function (node) {
+      return _this.canvas = node;
+    };
 
     _this.createWave = function (ev) {
-      var canvas = _this.refs.canvas;
+      var canvas = _this.canvas;
       var canvasParent = canvas.parentNode;
       var disabled = typeof _this.props.disabled === 'boolean' ? _this.props.disabled : canvasParent.disabled;
 
@@ -473,10 +478,7 @@ var Water = /*#__PURE__*/function (_Component) {
             clientY = ev.clientY;
         var pointX = clientX - left;
         var pointY = clientY - top;
-        var _canvas = _this.refs.canvas;
-
-        var ctx = _canvas.getContext('2d');
-
+        var ctx = canvas.getContext('2d');
         var _this$props = _this.props,
             press = _this$props.press,
             stopPropagation = _this$props.stopPropagation;
@@ -491,12 +493,10 @@ var Water = /*#__PURE__*/function (_Component) {
           return;
         }
 
-        _canvas.width = width * dpr;
-        _canvas.height = height * dpr;
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
         ctx.scale(dpr, dpr);
-
-        _canvas.classList.add(WATER_DURATION_CLASS);
-
+        canvas.classList.add(WATER_DURATION_CLASS);
         var startTime = Date.now();
 
         _this.ripples.push(new Ripple(ctx, isNaN(x) ? pointX : x, isNaN(y) ? pointY : y, width, height, startTime, true, _this.props));
@@ -513,11 +513,10 @@ var Water = /*#__PURE__*/function (_Component) {
           } else if (press === 'down' && _this.startState) {
             _this.clearShadow = function () {
               delete _this.clearShadow;
-
-              _canvas.classList.remove(WATER_DURATION_CLASS);
+              canvas.classList.remove(WATER_DURATION_CLASS);
             };
           } else {
-            _canvas.classList.remove(WATER_DURATION_CLASS);
+            canvas.classList.remove(WATER_DURATION_CLASS);
           }
         };
 
@@ -533,7 +532,7 @@ var Water = /*#__PURE__*/function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      var canvasParent = this.refs.canvas.parentNode;
+      var canvasParent = this.canvas.parentNode;
 
       var _root$getComputedStyl = root$1.getComputedStyle(canvasParent, null),
           position = _root$getComputedStyl.position;
@@ -552,7 +551,7 @@ var Water = /*#__PURE__*/function (_Component) {
     value: function componentWillUnmount() {
       var _this3 = this;
 
-      var canvasParent = this.refs.canvas.parentNode;
+      var canvasParent = this.canvas.parentNode;
       rafDom.cancelAnimationFrame(this.timer);
       clearTimeout(this.clearTimer);
       canvasParent.style.webkitTapHighlightColor = null;
@@ -621,7 +620,7 @@ var Water = /*#__PURE__*/function (_Component) {
           break;
 
         case 6:
-          if (ev.target !== this.refs.canvas.parentNode && (ev.detail.shouldCancel || ev.defaultPrevented)) {
+          if (ev.target !== this.canvas.parentNode && (ev.detail.shouldCancel || ev.defaultPrevented)) {
             this.clearEvent();
           }
 
@@ -645,6 +644,8 @@ var Water = /*#__PURE__*/function (_Component) {
   }, {
     key: "dispatchEvent",
     value: function dispatchEvent() {
+      var _this$canvas$parentNo;
+
       var stopPropagation = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
       var ev;
 
@@ -663,7 +664,7 @@ var Water = /*#__PURE__*/function (_Component) {
         });
       }
 
-      return this.refs.canvas.parentNode.dispatchEvent(ev);
+      return (_this$canvas$parentNo = this.canvas.parentNode) === null || _this$canvas$parentNo === void 0 ? void 0 : _this$canvas$parentNo.dispatchEvent(ev);
     }
   }, {
     key: "getOrigin",
@@ -704,7 +705,7 @@ var Water = /*#__PURE__*/function (_Component) {
     key: "render",
     value: function render() {
       return /*#__PURE__*/React__default['default'].createElement("canvas", {
-        ref: "canvas",
+        ref: this.refCanvasCallback,
         className: "water-wave-canvas"
       });
     }

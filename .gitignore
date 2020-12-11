@@ -1,3 +1,4 @@
 /node_modules
 *.un~
 .DS_Store
+/.git-tsconfig.json
