@@ -79,7 +79,7 @@
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "rimraf": "3.0.2",
-    "rollup": "2.33.1",
+    "rollup": "3.29.5",
     "rollup-plugin-copy": "3.3.0",
     "rollup-plugin-filesize": "9.0.2",
     "rollup-plugin-sass": "1.2.2",
